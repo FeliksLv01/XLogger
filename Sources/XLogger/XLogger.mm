@@ -207,7 +207,7 @@
     if ([fileManager fileExistsAtPath:zipFilePath]) {
         @try {
             [fileManager removeItemAtPath:zipFilePath error:error];
-            if (*error) {
+            if (error && *error) {
                 return nil;
             }
         } @catch (NSException *exception) {
