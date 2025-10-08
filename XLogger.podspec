@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
   spec.source_files = "Sources/XLogger/*.{h,mm}"
   spec.public_header_files = "Sources/XLogger/*.h"
   
-  spec.vendored_frameworks = "Frameworks/mars.framework"
+  spec.vendored_frameworks = "XCFrameworks/mars.xcframework"
   
   spec.dependency "CocoaLumberjack"
   
