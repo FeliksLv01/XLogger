@@ -63,6 +63,9 @@ typedef NS_ENUM(NSUInteger, MarsXLoggerLevel) {
 /// 关闭 XLog
 - (void)close;
 
+/// 压缩日志并返回压缩包路径
+- (void)zipLogsWithCompletion:(void (^)(NSURL *_Nullable, NSError *_Nullable))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END
