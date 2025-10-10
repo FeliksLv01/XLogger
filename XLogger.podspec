@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "XLogger"
-  spec.version      = "0.0.4"
+  spec.version      = "0.0.5"
   spec.summary      = "A logging framework based on Mars XLog"
   spec.description  = "XLogger is a logging framework that integrates Mars XLog with CocoaLumberjack for iOS applications."
   

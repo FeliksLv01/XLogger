@@ -123,7 +123,6 @@
     xlogConfig.cache_days_ = (unsigned int)config.cacheDays;
     
 #if DEBUG
-    
     xlogger_SetLevel((TLogLevel)kLevelDebug);
 #else
     
@@ -145,7 +144,6 @@
 }
 
 - (void)logMessage:(DDLogMessage *)logMessage {
-    // 转换 DDLogLevel 到 TLogLevel
     TLogLevel level;
     switch (logMessage.level) {
         case DDLogLevelVerbose:
@@ -168,18 +166,21 @@
             break;
     }
     
-    // 提取文件名
-    const char *filename =
-    logMessage.file ? [logMessage.file.lastPathComponent UTF8String] : "";
+    const char *filename = logMessage.file ? [logMessage.file.lastPathComponent UTF8String] : "";
+    const char *funcname = [logMessage.function UTF8String] ?: "";
     
-    // 构建 XLoggerInfo
     XLoggerInfo info;
     info.level = level;
-    // 写入日志
+    info.line = (int)logMessage.line;
+    info.filename = filename;
+    info.func_name = funcname;
+    info.tag = "";
+    
     id <DDLogFormatter> logFormatter = _logFormatter;
     if (_logFormatter == nil) {
         logFormatter = self.defaultFormatter;
     }
+    
     const char *message = [[logFormatter formatLogMessage:logMessage] UTF8String];
     xlogger_Write(&info, message);
 }
@@ -191,34 +192,31 @@
     }
     
     NSString *path = [pathURL path];
-    // 检查日志文件夹是否存在
+    
     BOOL isDirectory = YES;
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
     if (![fileManager fileExistsAtPath:path isDirectory:&isDirectory] || !isDirectory) {
         return nil;
     }
-    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier];
-    NSString *zipFileName = [NSString stringWithFormat:@"%@.zip", bundleIdentifier];
-    
+    // 目标目录：Caches/xlog，生成压缩包前清空该目录
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString *zipFilePath = [cacheDir stringByAppendingPathComponent:zipFileName];
-    
-    if ([fileManager fileExistsAtPath:zipFilePath]) {
-        @try {
-            [fileManager removeItemAtPath:zipFilePath error:error];
-            if (error && *error) {
-                return nil;
-            }
-        } @catch (NSException *exception) {
-            if (error) {
-                *error = [NSError errorWithDomain:@"LogZipError"
-                                             code:-3
-                                         userInfo:@{NSLocalizedDescriptionKey: @"Failed to remove existing zip file"}];
-            }
+    NSString *zipDir = [cacheDir stringByAppendingPathComponent:@"xlog"];
+
+    if ([fileManager fileExistsAtPath:zipDir]) {
+        if (![fileManager removeItemAtPath:zipDir error:error]) {
             return nil;
         }
     }
+    if (![fileManager createDirectoryAtPath:zipDir withIntermediateDirectories:YES attributes:nil error:error]) {
+        return nil;
+    }
+
+    NSString *bundleIdentifier = [[NSBundle mainBundle] bundleIdentifier] ?: @"";
+    long long timestamp = (long long)[[NSDate date] timeIntervalSince1970];
+    NSString *zipFileName = [NSString stringWithFormat:@"%@_log_%lld.zip", bundleIdentifier, timestamp];
+    NSString *zipFilePath = [zipDir stringByAppendingPathComponent:zipFileName];
+
     BOOL success = [SSZipArchive createZipFileAtPath:zipFilePath withContentsOfDirectory:path];
     if (success) {
         return [NSURL fileURLWithPath:zipFilePath];
