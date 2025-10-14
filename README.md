@@ -1,6 +1,6 @@
 # XLogger
 
-[![Version](https://img.shields.io/badge/version-0.0.4-blue.svg)](https://github.com/yourusername/XLogger)
+[![Version](https://img.shields.io/badge/version-0.0.5-blue.svg)](https://github.com/yourusername/XLogger)
 [![Platform](https://img.shields.io/badge/platform-iOS%2012.0%2B-lightgrey.svg)](https://github.com/yourusername/XLogger)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -22,7 +22,7 @@ XLogger 是一个基于 Mars XLog 的 iOS 日志框架，集成了 CocoaLumberja
 在你的 `Podfile` 中添加：
 
 ```ruby
-pod 'XLogger'
+pod 'XLogger', :git => 'git@github.com:FeliksLv01/XLogger.git', :tag => '0.0.5'
 ```
 
 然后运行：
