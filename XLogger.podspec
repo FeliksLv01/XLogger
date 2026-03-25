@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
   spec.license      = { :type => "MIT", :file => "LICENSE" }
   spec.author       = { "Your Name" => "your.email@example.com" }
   
-  spec.platform     = :ios, "12.0"
+  spec.ios.deployment_target = '12.0'
   spec.source       = { :git => "https://github.com/FeliksLv01/XLogger.git", :tag => "#{spec.version}" }
   
   spec.source_files = "Sources/XLogger/*.{h,mm,m}"
