@@ -22,7 +22,7 @@ XLogger 是一个基于 Mars XLog 的 iOS 日志框架，集成了 CocoaLumberja
 在你的 `Podfile` 中添加：
 
 ```ruby
-pod 'XLogger', :git => 'git@github.com:FeliksLv01/XLogger.git', :tag => '0.0.5'
+pod 'XLogger', :git => 'git@github.com:FeliksLv01/XLogger.git', :tag => '0.0.6'
 ```
 
 然后运行：
