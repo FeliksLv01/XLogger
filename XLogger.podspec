@@ -20,6 +20,7 @@ Pod::Spec.new do |spec|
   spec.dependency "SSZipArchive"
   
   spec.library = 'c++'
+  spec.library = 'z'
   
   spec.pod_target_xcconfig = {
     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
